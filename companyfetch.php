@@ -1,0 +1,47 @@
+<?php
+
+
+//fetch.php
+
+
+$connect = new PDO("mysql:host=localhost;dbname=PCELL", "root", "");
+
+
+$output = '';
+
+
+$query = '';
+
+
+if(isset($_POST["query"]))
+{
+ $search = str_replace(",", "|", $_POST["query"]);
+ $query = "
+ SELECT * FROM company
+ WHERE CNAME REGEXP '".$search."'
+ OR CITY REGEXP '".$search."'
+ OR STATE REGEXP '".$search."'
+ OR PINCODE REGEXP '".$search."'
+ OR FTE REGEXP '".$search."'
+ ";
+}
+else
+{
+ 
+}
+
+
+$statement = $connect->prepare($query);
+$statement->execute();
+
+
+while($row = $statement->fetch(PDO::FETCH_ASSOC))
+{
+ $data[] = $row;
+}
+
+
+echo json_encode($data);
+
+
+?>
